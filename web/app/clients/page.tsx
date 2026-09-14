@@ -1,22 +1,27 @@
+
 'use client'
 import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase'
 
 export default function ClientsPage() {
   const [clients, setClients] = useState<any[]>([])
+
   useEffect(() => {
-    async function fetchClients() {
+    async function load() {
       const { data } = await supabase.from('clients').select('*').limit(20)
       if (data) setClients(data)
     }
-    fetchClients()
+    load()
   }, [])
+
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Clients</h1>
-      <div className="mt-4">
-        {clients.length === 0 ? <p>No clients found</p> : clients.map((c: any) => (
-          <div key={c.id} className="border p-2 mb-2 rounded">{c.name || c.email || c.id}</div>
+    <div style={{padding: '20px'}}>
+      <h1 style={{fontSize: '24px', fontWeight: 'bold'}}>Clients</h1>
+      <div style={{marginTop: '20px'}}>
+        {clients.length === 0 ? <p>No clients found</p> : clients.map((c:any) => (
+          <div key={c.id} style={{border: '1px solid #ccc', padding: '10px', marginBottom: '10px'}}>
+            {c.name || c.email || c.id}
+          </div>
         ))}
       </div>
     </div>
