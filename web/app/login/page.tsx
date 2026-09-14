@@ -1,30 +1,30 @@
-"use client"
-import { useState } from "react"
-export default function Login(){
-  const [uid, setUid] = useState("")
-  const [pwd, setPwd] = useState("")
-  const [tfa, setTfa] = useState("")
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
+  const router = useRouter();
+
   const doLogin = () => {
-    const u = uid.trim().toLowerCase()
-    const p = pwd.trim().toLowerCase()
-    const t = tfa.trim()
-    // Debug - em type chesamo chupistundi
-    if(u.includes("auditor") && p.includes("admin123") && t.includes("123456")){
-      alert("Login Success! Sec 6 Done ✅")
-      localStorage.setItem("nexlance_auth","true")
-      window.location.href = "/"
+    if (email && pass) {
+      localStorage.setItem("nexlance_logged", "true");
+      router.push("/");
     } else {
-      alert(`FAIL - You typed:\nID=[${u}] len=${u.length}\nPass=[${p}] len=${p.length}\n2FA=[${t}]\n\nCorrect is auditor / admin123 / 123456`)
+      alert("Email & Password enter chey");
     }
-  }
-  return(
-    <div style={{padding:30, fontFamily:"sans-serif"}}>
-      <h2>Nexlance Login - Sec 6</h2>
-      <p>No Google Login</p>
-      <input placeholder="User ID" value={uid} onChange={e=>setUid(e.target.value)} style={{width:"100%",padding:10,marginBottom:10}} />
-      <input placeholder="Password" value={pwd} onChange={e=>setPwd(e.target.value)} style={{width:"100%",padding:10,marginBottom:10}} />
-      <input placeholder="2FA" value={tfa} onChange={e=>setTfa(e.target.value)} style={{width:"100%",padding:10,marginBottom:10}} />
-      <button onClick={doLogin} style={{padding:"12px 20px",background:"black",color:"white"}}>Login</button>
+  };
+
+  return (
+    <div style={{minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc'}}>
+      <div style={{background: 'white', padding: 30, borderRadius: 16, border: '1px solid #ddd', width: 360}}>
+        <h2 style={{margin: 0}}>Login - Nexlance</h2>
+        <p style={{color: '#666', fontSize: 13}}>MFA Protected</p>
+        <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" style={{width: '100%', padding: 10, marginTop: 15, borderRadius: 8, border: '1px solid #ccc'}} />
+        <input value={pass} onChange={e=>setPass(e.target.value)} type="password" placeholder="Password" style={{width: '100%', padding: 10, marginTop: 10, borderRadius: 8, border: '1px solid #ccc'}} />
+        <button onClick={doLogin} style={{width: '100%', padding: 12, marginTop: 15, background: 'black', color: 'white', borderRadius: 8, border: 'none'}}>Login</button>
+      </div>
     </div>
-  )
+  );
 }
