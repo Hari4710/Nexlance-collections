@@ -42,4 +42,29 @@ export default function Page(){
   }
 
   return(
-    <div style={{padding:20, max
+    <div style={{padding:20, maxWidth:600, margin:'0 auto'}}>
+      <h2 style={{fontWeight:'bold'}}>Invoices - System of Record</h2>
+
+      <div style={{border:'1px solid #ccc', padding:15, marginTop:15, borderRadius:8}}>
+        <h3>+ New Invoice</h3>
+        <select value={clientId} onChange={e=>setClientId(e.target.value)} style={{width:'100%',padding:12, marginTop:8}}>
+          <option value="">Select Client</option>
+          {clients.map((c:any)=><option key={c.id} value={c.id}>{c.client_name}</option>)}
+        </select>
+        <input value={amount} onChange={e=>setAmount(e.target.value)} placeholder="65000" type="number" style={{width:'100%',padding:12,marginTop:10, boxSizing:'border-box'}} />
+        <button onClick={add} style={{width:'100%',padding:12,background:'black',color:'white',marginTop:10, border:'none', borderRadius:5}}>Add Invoice</button>
+      </div>
+
+      <h3 style={{marginTop:20}}>Invoices ({invoices.length})</h3>
+      <div style={{display:'flex', flexDirection:'column', gap:8, marginTop:10}}>
+        {invoices.map((x:any)=>
+          <div key={x.id} style={{border:'1px solid #eee',padding:12, borderRadius:6, display:'flex', justifyContent:'space-between', background:'#fafafa'}}>
+            <span><b style={{color:'#000'}}>{x.clients?.client_name || 'Unknown Client'}</b> <span style={{color:'#666', fontSize:13}}> - {x.invoice_no}</span></span>
+            <span style={{fontWeight:'bold'}}>Rs {x.amount}</span>
+          </div>
+        )}
+        {invoices.length===0 && <p style={{color:'#888'}}>No invoices yet</p>}
+      </div>
+    </div>
+  )
+}
