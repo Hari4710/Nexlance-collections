@@ -1,2 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
+import ClientsClient from './ClientsClient'
+export default function Page() {
+  return <ClientsClient />
+}
