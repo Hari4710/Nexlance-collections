@@ -1,7 +1,4 @@
-import { supabase } from '../../lib/supabase'
-
-export default function Page() {
-  const [clients, setClients] = useState<any[]>([])
+const [clients, setClients] = useState<any[]>([])
   const [invoices, setInvoices] = useState<any[]>([])
   const [clientId, setClientId] = useState('')
   const [amount, setAmount] = useState('')
