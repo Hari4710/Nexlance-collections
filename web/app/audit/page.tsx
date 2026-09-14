@@ -3,18 +3,18 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase'
 
 export default function AuditPage() {
-  const [data, setData] = useState<any[]>([])
+  const [logs, setLogs] = useState<any[]>([])
   useEffect(() => {
-    async function fetchData() {
+    async function load() {
       const { data } = await supabase.from('audit_logs').select('*').limit(20)
-      if (data) setData(data)
+      if (data) setLogs(data)
     }
-    fetchData()
+    load()
   }, [])
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Audit Logs</h1>
-      <pre className="mt-4 bg-gray-100 p-4 rounded">{JSON.stringify(data, null, 2)}</pre>
+    <div style={{padding: '20px'}}>
+      <h1 style={{fontSize: '24px', fontWeight: 'bold'}}>Audit Logs</h1>
+      <pre style={{marginTop: '20px', background: '#f5f5f5', padding: '10px'}}>{JSON.stringify(logs, null, 2)}</pre>
     </div>
   )
 }
