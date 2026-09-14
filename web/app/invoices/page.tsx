@@ -1,5 +1,4 @@
-const [clients, setClients] = useState<any[]>([])
-  const [invoices, setInvoices] = useState<any[]>([])
+const [invoices, setInvoices] = useState<any[]>([])
   const [clientId, setClientId] = useState('')
   const [amount, setAmount] = useState('')
 
