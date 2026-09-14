@@ -17,7 +17,7 @@ export default function ClientsPage() {
 
   const addClient = async () => {
     if (!name) return alert('Client Name pettali bro!')
-    const { error } = await supabase.from('clients').insert([{ name, gstin }])
+    const { error } = await supabase.from('clients').insert([{ client_name: name, gstin: gstin }])
     if (error) alert(error.message)
     else { setName(''); setGstin(''); loadClients() }
   }
@@ -34,7 +34,7 @@ export default function ClientsPage() {
         {clients.length === 0 ? <p>No clients yet - paina add chey bro!</p> : 
           clients.map((c:any) => (
             <div key={c.id} style={{ border: '1px solid #ddd', padding: '12px', margin: '8px 0', borderRadius: '8px' }}>
-              <b>{c.name}</b><br/><span style={{ color: '#666' }}>{c.gstin || 'No GSTIN'}</span>
+              <b>{c.client_name}</b><br/><span style={{ color: '#666' }}>{c.gstin || 'No GSTIN'}</span>
             </div>
           ))
         }
