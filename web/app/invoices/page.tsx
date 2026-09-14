@@ -26,8 +26,7 @@ export default function Page(){
     if(!amount) return alert('Amount pettu')
     const invNo='INV-'+Date.now().toString().slice(-6)
     const n=Number(amount)
-    const today = new Date().toISOString().split('T')[0]
-    const due = new Date(Date.now()+30*24*60*60*1000).toISOString().split('T')[0] // 30 days tarvata
+    const due = new Date(Date.now()+30*24*60*60*1000).toISOString().split('T')[0]
 
     const {error}=await supabase.from('invoices').insert({
       client_id: clientId,
@@ -36,7 +35,6 @@ export default function Page(){
       total_amount: n,
       gst_amount: 0,
       status: 'pending',
-      invoice_date: today,
       due_date: due
     })
     if(error) alert('ERROR: '+error.message)
