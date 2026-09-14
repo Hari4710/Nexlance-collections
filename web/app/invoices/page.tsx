@@ -26,13 +26,18 @@ export default function Page(){
     if(!amount) return alert('Amount pettu')
     const invNo='INV-'+Date.now().toString().slice(-6)
     const n=Number(amount)
+    const today = new Date().toISOString().split('T')[0]
+    const due = new Date(Date.now()+30*24*60*60*1000).toISOString().split('T')[0] // 30 days tarvata
+
     const {error}=await supabase.from('invoices').insert({
       client_id: clientId,
       invoice_no: invNo,
       amount: n,
       total_amount: n,
       gst_amount: 0,
-      status: 'pending'
+      status: 'pending',
+      invoice_date: today,
+      due_date: due
     })
     if(error) alert('ERROR: '+error.message)
     else{ alert('SUCCESS '+invNo); setAmount(''); setClientId(''); load() }
@@ -47,7 +52,7 @@ export default function Page(){
           <option value="">Select Client</option>
           {clients.map((c:any)=><option key={c.id} value={c.id}>{c.client_name}</option>)}
         </select>
-        <input value={amount} onChange={e=>setAmount(e.target.value)} placeholder="45000" type="number" style={{width:'100%',padding:12,marginTop:10}} />
+        <input value={amount} onChange={e=>setAmount(e.target.value)} placeholder="65000" type="number" style={{width:'100%',padding:12,marginTop:10}} />
         <button onClick={add} style={{width:'100%',padding:12,background:'black',color:'white',marginTop:10}}>Add Invoice</button>
       </div>
       <h3>Invoices ({invoices.length})</h3>
