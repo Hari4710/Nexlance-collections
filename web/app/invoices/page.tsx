@@ -1,8 +1,9 @@
 "use client"
 import { useState, useEffect } from "react"
-import { supabase } from "../../../lib/supabase"
 
-export default function Invoices(){
+exportimport { supabase } from "../../lib/supabase"
+ 
+default function Invoices(){
  const [clients,setClients]=useState<any[]>([])
  const [invoices,setInvoices]=useState<any[]>([])
  const [cName,setCName]=useState("")
