@@ -31,7 +31,6 @@ export default function Page(){
       invoice_no: invNo,
       amount: n,
       total_amount: n,
-      subtotal: n,
       gst_amount: 0,
       status: 'pending'
     })
@@ -48,7 +47,7 @@ export default function Page(){
           <option value="">Select Client</option>
           {clients.map((c:any)=><option key={c.id} value={c.id}>{c.client_name}</option>)}
         </select>
-        <input value={amount} onChange={e=>setAmount(e.target.value)} placeholder="65000" type="number" style={{width:'100%',padding:12,marginTop:10}} />
+        <input value={amount} onChange={e=>setAmount(e.target.value)} placeholder="45000" type="number" style={{width:'100%',padding:12,marginTop:10}} />
         <button onClick={add} style={{width:'100%',padding:12,background:'black',color:'white',marginTop:10}}>Add Invoice</button>
       </div>
       <h3>Invoices ({invoices.length})</h3>
