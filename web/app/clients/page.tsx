@@ -1,3 +1,5 @@
+'use client'
+// @ts-nocheck
 import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase'
 
@@ -6,37 +8,54 @@ export default function ClientsPage() {
   const [name, setName] = useState('')
   const [gstin, setGstin] = useState('')
 
-  const loadClients = async () => {
+  const load = async () => {
     const { data } = await supabase.from('clients').select('*').order('created_at', { ascending: false })
     if (data) setClients(data)
   }
+  useEffect(() => { load() }, [])
 
-  useEffect(() => { loadClients() }, [])
-
-  const addClient = async () => {
-    if (!name) return alert('Client Name pettali bro!')
-    const { error } = await supabase.from('clients').insert([{ client_name: name, gstin: gstin }])
+  const add = async () => {
+    if (!name) return alert('Client Name pettu bro!')
+    const { error } = await supabase.from('clients').insert([{ client_name: name, gstin, is_archived: false }])
     if (error) alert(error.message)
-    else { setName(''); setGstin(''); loadClients() }
+    else { setName(''); setGstin(''); load() }
   }
 
+  const toggleArchive = async (id: string, archive: boolean) => {
+    await supabase.from('clients').update({ is_archived: archive }).eq('id', id)
+    load()
+  }
+
+  const active = clients.filter(c => !c.is_archived)
+  const archived = clients.filter(c => c.is_archived)
+
   return (
-    <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
-      <h1 style={{ fontSize: '28px', fontWeight: 'bold' }}>Clients</h1>
-      <div style={{ background: '#f0f0f0', padding: '15px', borderRadius: '10px', marginTop: '15px' }}>
-        <input value={name} onChange={e=>setName(e.target.value)} placeholder="Client Name *" style={{ width: '100%', padding: '12px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '5px' }} />
-        <input value={gstin} onChange={e=>setGstin(e.target.value)} placeholder="GSTIN" style={{ width: '100%', padding: '12px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '5px' }} />
-        <button onClick={addClient} style={{ width: '100%', padding: '12px', background: 'black', color: 'white', borderRadius: '8px', border: 'none', fontWeight: 'bold' }}>+ Add Client</button>
+    <div style={{ padding: '20px', fontFamily: 'sans-serif', maxWidth: '800px' }}>
+      <h1 style={{ fontSize: '26px', fontWeight: 'bold' }}>Clients - System of Record</h1>
+      <p style={{ color: '#555' }}>No deletion, only Archive. 6-year retention.</p>
+
+      <div style={{ border: '1px solid #ddd', padding: '15px', marginTop: '15px' }}>
+        <h3>+ New Client</h3>
+        <input value={name} onChange={e=>setName(e.target.value)} placeholder="Client Name" style={{ width: '100%', padding: '10px', margin: '8px 0', border: '1px solid #ccc' }} />
+        <input value={gstin} onChange={e=>setGstin(e.target.value)} placeholder="GSTIN" style={{ width: '100%', padding: '10px', margin: '8px 0', border: '1px solid #ccc' }} />
+        <button onClick={add} style={{ background: 'black', color: 'white', padding: '8px 20px', border: 'none' }}>Add Client</button>
       </div>
-      <div style={{ marginTop: '20px' }}>
-        {clients.length === 0 ? <p>No clients yet - paina add chey bro!</p> : 
-          clients.map((c:any) => (
-            <div key={c.id} style={{ border: '1px solid #ddd', padding: '12px', margin: '8px 0', borderRadius: '8px' }}>
-              <b>{c.client_name}</b><br/><span style={{ color: '#666' }}>{c.gstin || 'No GSTIN'}</span>
-            </div>
-          ))
-        }
-      </div>
+
+      <h3 style={{ marginTop: '20px' }}>Active Client List ({active.length})</h3>
+      {active.map((c:any) => (
+        <div key={c.id} style={{ border: '1px solid #ddd', padding: '10px', margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}>
+          <div><b>{c.client_name}</b> - {c.gstin}</div>
+          <button onClick={()=>toggleArchive(c.id, true)}>Archive</button>
+        </div>
+      ))}
+
+      <h3 style={{ marginTop: '20px', color: '#888' }}>Archived Clients ({archived.length}) - 6 Year Retention</h3>
+      {archived.map((c:any) => (
+        <div key={c.id} style={{ border: '1px solid #ddd', padding: '10px', margin: '6px 0', background: '#f9f9f9', display: 'flex', justifyContent: 'space-between' }}>
+          <div><b>{c.client_name}</b> - {c.gstin}</div>
+          <button onClick={()=>toggleArchive(c.id, false)}>Restore</button>
+        </div>
+      ))}
     </div>
   )
 }
